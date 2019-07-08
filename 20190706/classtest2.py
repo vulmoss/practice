@@ -13,7 +13,8 @@ class NewUser(object):
         if isinstance(value,str) and len(value) >3:
             self._name = value
         else:
-            self._name = 'ERROR'
+            raise '
+
 if __name__ == '__main__':
     user1 = NewUser(101, 'Jack')
     user1.name = 'Lou'
