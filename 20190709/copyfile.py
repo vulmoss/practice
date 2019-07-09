@@ -16,4 +16,8 @@ def main():
 
 if __name__ == '__main__':
     main()
-
+'''
+读取 shiyanlou.txt 文件中的内容，并将其写入 /home/shiyanlou/shiyanlou_copy.txt 文件中
+copyfile.py 文件代码中必须使用 readlines() 方法
+shiyanlou_copy.txt 文件中的内容格式必须如下所示（即每一行前面加上对应的行数）：
+'''
