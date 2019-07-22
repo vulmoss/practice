@@ -1,0 +1,24 @@
+
+testlist = ['Linux', 'Java', 'Python', 'DevOps', 'Go']
+
+it = iter(testlist)
+print("Loop Start...")
+while True:
+    try:
+        course = next(it)
+        print(course)
+    except OverflowError:
+        print("Loop End")
+
+
+
+运行这段代码发现结果存在错误，需要修复代码中的 BUG，预期正常的输出应该为：
+
+$ python3 /home/shiyanlou/itertest.py
+Loop Start...
+Linux
+Java
+Python
+DevOps
+Go
+Loop End
