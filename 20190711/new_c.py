@@ -5,7 +5,7 @@ import sys
 import csv
 from collections import namedtuple
 
-IncomeTaxQuickLoopItem = namedtuple('IncomeTaxQuickLoopItem',['start_point','tax_rate','del_sub'])
+IncomeTaxQuickLookupItem = namedtuple('IncomeTaxQuickLookupItem',['start_point','tax_rate','del_sub'])
 INCOME_TAX_START_POINT = 3500
 
 INCOME_TAX_QUICK_LOOKUP_TABLE = [
@@ -109,21 +109,48 @@ class UserData(object):
 class IncomeTaxCalculater(object):
     def __init__(self):
         self.userdata = userdata
+    @classmethod
+    def calc_social_insurance_money(cls,income):
+        if income < config.social_insurance_baseline_low:
+            return config.social_insurance_baseline_low * \
+                config.social_insurance_total_rate
+        elif income > config.social_insurance_baseline_high:
+            return config.social_insurance_baseline_high * \
+                config.social_insurance_total_rate
+        else :
+            return income * config.social_insurance_total_rate
+    @classmethod
+    def calc_income_tax_and_remain(cls,income):
+        social_insurance_money = cls.calc_social_insurance_money(income)
+        real_income = income - social_insurance_money
+        taxable_part = real_income - INCOME_TAX_START_POINT
+        for item in INCOME_TAX_QUICK_LOOKUP_TABLE:
+            if taxable_part >item.start_point:
+                tax = taxable_part * item.tax_rate - item.del_sub
+                return '{:.2f}'.format(tax),'{:.2f}'.format(real_income - tax)
+        return '0.00','{:.2f}'.format(real_income)
+
+
 
     def calc_for_all_userdata(self):
         result = []
         for employee_id,income in self.userdata:
-            data = [employee_id,income]
-            social_insurance_money =
+            social_insurance_money = '{:.2f}'.format(self.calc_social_insurance_money(income))
+            tax,remain = self.calc_income_tax_and_remain(income)
+            result.append([employee_id,income,social_insurance_money,tax,remain])
+        return result
+
+
 
     def export(self,default='csv'):
         result = self.calc_for_all_userdata()
-        with open("输出文件的路径，由输入参数获得：") as f:
+        with open(args.export_data,'w',new_line='') as f:
             wirter = csv.writer(f)
             writer.writerows(result)
 
 
 if __name__ == '__main__':
-    TODO
+    calc = IncomeTaxCalculater(userdata())
+    calc.export()
 
 
